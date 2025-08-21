@@ -57,3 +57,7 @@ body {
   height: 24px;
   margin-left: 6px;
 }
+
+.card, .number, .control-btn {
+  touch-action: manipulation;
+}
