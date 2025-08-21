@@ -1,0 +1,59 @@
+body {
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: #111;
+  color: #fff;
+  margin: 0;
+}
+.container {
+  text-align: center;
+  font-size: 12px;
+}
+.card, .number {
+  margin: 20px;
+  padding: 20px;
+  border: 2px solid #fff;
+  border-radius: 10px;
+  font-size: 28px;
+  cursor: pointer;
+  user-select: none;
+}
+.card:hover, .number:hover {
+  background: #333;
+}
+
+/* --- Boutons verts --- */
+#controls {
+  margin-top: 15px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+}
+.control-btn {
+  flex: 1;
+  max-width: 185px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 15px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s;
+
+  display: flex;                  
+  justify-content: space-between;
+  align-items: center;
+}
+.control-btn:hover {
+  background-color: #218838;
+}
+.btn-icon {
+  width: 28px;
+  height: 24px;
+  margin-left: 6px;
+}
