@@ -7,6 +7,15 @@ const mnemonica = [
   "6C","AH","9D"
 ];
 
+// --- Préchargement des cartes ---
+function preloadCards() {
+  mnemonica.forEach(cardCode => {
+    const img = new Image();
+    img.src = `images/${cardCode}.svg`;
+  });
+}
+window.addEventListener("load", preloadCards);
+
 // --- Fonctions utilitaires pour générer des valeurs aléatoires ---
 function getRandomCard() {
   const suits = ["S","H","D","C"];
