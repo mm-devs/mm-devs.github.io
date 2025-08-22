@@ -57,6 +57,12 @@ function isCoherent() {
   return mnemonica[lastNumber - 1] === lastCard;
 }
 
+// --- Vérifier si carte et nombre sont en miroir ---
+function isMirror() {
+  if (lastCard === null || lastNumber === null) return false;
+  return mnemonica[53 - lastNumber - 1] === lastCard;
+}
+
 // --- Fonctions de synchronisation ---
 function syncCardWithNumber() {
   const cardCode = mnemonica[lastNumber - 1];
@@ -72,31 +78,27 @@ function syncNumberWithCard() {
 
 // --- Gestion des clics sur la carte ---
 cardDisplay.addEventListener("click", () => {
-  if (neutralMode) {
-    if (!isCoherent()) {
-      if (lastNumber !== null) {
-        syncCardWithNumber();
-      } else if (lastCard !== null) {
-        syncNumberWithCard();
-      }
-    } else {
-      const newCard = getRandomCard();
-      cardDisplay.src = `images/${newCard}.svg`;
-      lastCard = newCard;
-      pendingReveal = "number";
+  if (neutralMode || pendingReveal === "card") {
+    // Premier clic après 3s ou changement d’élément
+    if (isCoherent()) {
+      // Cohérent → valeur miroir
+      const mirrorIndex = 53 - lastNumber;
+      lastCard = mnemonica[mirrorIndex - 1];
+      cardDisplay.src = `images/${lastCard}.svg`;
     }
-    neutralMode = false;
-  } else if (pendingReveal === "card") {
-    if (!isCoherent()) {
+	else if (isMirror()) {
+      // Déjà en miroir → remettre cohérence
       syncCardWithNumber();
-    } else {
-      const newCard = getRandomCard();
-      cardDisplay.src = `images/${newCard}.svg`;
-      lastCard = newCard;
-      pendingReveal = "number";
     }
-    pendingReveal = null;
-  } else {
+	else {
+      // Incohérent → s’aligner sur le nombre
+      syncCardWithNumber();
+    }
+    pendingReveal = "number"; // prochain clic sur nombre
+    neutralMode = false;
+  }
+  else {
+    // Clic répété → aléatoire
     const newCard = getRandomCard();
     cardDisplay.src = `images/${newCard}.svg`;
     lastCard = newCard;
@@ -107,31 +109,29 @@ cardDisplay.addEventListener("click", () => {
 
 // --- Gestion des clics sur le nombre ---
 numberDisplay.addEventListener("click", () => {
-  if (neutralMode) {
-    if (!isCoherent()) {
-      if (lastCard !== null) {
-        syncNumberWithCard();
-      } else if (lastNumber !== null) {
-        syncCardWithNumber();
-      }
-    } else {
-      const newNumber = getRandomNumber();
-      numberDisplay.textContent = newNumber;
-      lastNumber = newNumber;
-      pendingReveal = "card";
+  if (neutralMode || pendingReveal === "number") {
+    // Premier clic après 3s ou changement d’élément
+    if (isCoherent()) {
+      // Cohérent → valeur miroir
+      const mirrorNumber = 53 - lastNumber;
+      lastNumber = mirrorNumber;
+      numberDisplay.textContent = lastNumber;
     }
+	else if (isMirror()) {
+      // Déjà en miroir → remettre cohérence
+      lastNumber = mnemonica.indexOf(lastCard) + 1;
+      numberDisplay.textContent = lastNumber;
+    }
+	else {
+      // Incohérent → s’aligner sur la carte
+      lastNumber = mnemonica.indexOf(lastCard) + 1;
+      numberDisplay.textContent = lastNumber;
+    }
+    pendingReveal = "card"; // prochain clic sur carte
     neutralMode = false;
-  } else if (pendingReveal === "number") {
-    if (!isCoherent()) {
-      syncNumberWithCard();
-    } else {
-      const newNumber = getRandomNumber();
-      numberDisplay.textContent = newNumber;
-      lastNumber = newNumber;
-      pendingReveal = "card";
-    }
-    pendingReveal = null;
-  } else {
+  }
+  else {
+    // Clic répété → aléatoire
     const newNumber = getRandomNumber();
     numberDisplay.textContent = newNumber;
     lastNumber = newNumber;
